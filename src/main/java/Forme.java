@@ -15,4 +15,5 @@ public abstract class Forme {
     public void deplacer(Point p) {
         this.p = p;
     }
+    public abstract String toString();
 }
