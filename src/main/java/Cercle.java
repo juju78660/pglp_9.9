@@ -2,7 +2,7 @@ public class Cercle extends Forme{
 
     int rayon;
 
-    public Cercle(String nom, Point p, int rayon) {
+    public Cercle(String nom, Point p, int rayon){
         super(nom, p);
         this.rayon = rayon;
     }

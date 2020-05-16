@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
-
+// TODO AJOUTER CONDITION COMPOSITE VIDE TOSTRING
+// TODO AJOUTER CONDITION COMPOSITE VIDE DEPLACER
 public class CompositeForme extends Forme{
     private List<Forme> groupeFormes = new ArrayList<Forme>();
 
@@ -31,7 +32,6 @@ public class CompositeForme extends Forme{
         else throw new Exception("La forme n'existe pas");
     }*/
 
-    // J'AI CHOISI DE FAIRE HERITER LES FORMES DE FORME, JE DOIS DONC METTRE LE CODE CI-DESSOUS
     CompositeForme(String nom) {
         super(nom);
     }
