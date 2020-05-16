@@ -1,19 +1,25 @@
-import java.sql.*;
+package DAO;
 
-public class TriangleDAO extends DAO<Triangle>{
+import Formes.Carre;
+import Formes.Point;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+public class CarreDAO extends DAO<Carre>{
     private Connection connect = null;
     private String dbURL = "jdbc:derby:DB;create=true";
 
     @Override
-    public boolean create(Triangle obj) throws FormeDejaExistenteException, SQLException {
+    public boolean create(Carre obj) throws FormeDejaExistenteException, SQLException {
         boolean objetDejaExistant = false;
         try {
             connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "SELECT * FROM Triangle WHERE Nom = ?";
+            String contenuRequete = "SELECT * FROM Carre WHERE Nom = ?";
             PreparedStatement requete = connect.prepareStatement(contenuRequete);
             requete.setString(1, obj.nom);
             ResultSet resultat = requete.executeQuery();
-            if (resultat.next()) {
+            if(resultat.next()) {
                 objetDejaExistant = true;
                 resultat.close();
                 requete.close();
@@ -26,18 +32,15 @@ public class TriangleDAO extends DAO<Triangle>{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (!objetDejaExistant) {
-            String contenuRequete = "INSERT INTO Triangle (Nom, Pos1X, Pos1Y, Pos2X, Pos2Y, Pos3X, Pos3Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        if(!objetDejaExistant){
+            String contenuRequete = "INSERT INTO Carre (Nom, PosX, PosY, Cote) VALUES (?, ?, ?, ?)";
             PreparedStatement requete = null;
             try {
                 requete = connect.prepareStatement(contenuRequete);
                 requete.setString(1, obj.nom);
-                requete.setInt(2, obj.sommet1.x);
-                requete.setInt(3, obj.sommet1.y);
-                requete.setInt(4, obj.sommet2.x);
-                requete.setInt(5, obj.sommet2.y);
-                requete.setInt(6, obj.sommet3.x);
-                requete.setInt(7, obj.sommet3.y);
+                requete.setInt(2, obj.p.x);
+                requete.setInt(3, obj.p.y);
+                requete.setInt(4, obj.cote);
                 requete.executeUpdate();
                 requete.close();
             } catch (SQLException e) {
@@ -56,14 +59,14 @@ public class TriangleDAO extends DAO<Triangle>{
     public boolean delete(String nom) throws SQLException {
         try {
             connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "DELETE FROM Triangle WHERE nom = ?";
+            String contenuRequete = "DELETE FROM Carre WHERE nom = ?";
             PreparedStatement requete = connect.prepareStatement(contenuRequete);
             requete.setString(1, nom);
             requete.executeUpdate();
             requete.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            connect.commit();
+            connect.close();
             return false;
         }
         connect.commit();
@@ -72,11 +75,11 @@ public class TriangleDAO extends DAO<Triangle>{
     }
 
     @Override
-    public Triangle update(Triangle obj) throws SQLException, FormeInexistanteException {
+    public Carre update(Carre obj) throws SQLException, FormeInexistanteException {
         boolean objetDejaExistant = false;
         try {
             connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "SELECT * FROM Triangle WHERE Nom = ?";
+            String contenuRequete = "SELECT * FROM Carre WHERE Nom = ?";
             PreparedStatement requete = connect.prepareStatement(contenuRequete);
             requete.setString(1, obj.nom);
             ResultSet resultat = requete.executeQuery();
@@ -95,42 +98,41 @@ public class TriangleDAO extends DAO<Triangle>{
         if(objetDejaExistant) {
             try {
                 connect = DriverManager.getConnection(dbURL);
-                String contenuRequete = "UPDATE Triangle SET Pos1X = ?, Pos1Y = ?, Pos2X = ?, Pos2Y = ?, Pos3X = ?, Pos3Y = ? WHERE Nom = ?";
+                String contenuRequete = "UPDATE Carre SET PosX = ?, PosY = ?, Cote = ? WHERE Nom = ?";
                 PreparedStatement requete = connect.prepareStatement(contenuRequete);
-                requete.setInt(1, obj.sommet1.x);
-                requete.setInt(2, obj.sommet1.y);
-                requete.setInt(3, obj.sommet2.x);
-                requete.setInt(4, obj.sommet2.y);
-                requete.setInt(5, obj.sommet3.x);
-                requete.setInt(6, obj.sommet3.y);
-                requete.setString(7, obj.nom);
+                requete.setInt(1, obj.p.x);
+                requete.setInt(2, obj.p.y);
+                requete.setInt(3, obj.cote);
+                requete.setString(4, obj.nom);
                 requete.executeUpdate();
                 requete.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            connect.commit();
+            connect.close();
+            return obj;
         }
         else{
             throw new FormeInexistanteException();
         }
-        connect.commit();
-        connect.close();
-        return obj;
+
     }
 
     @Override
-    public Triangle find(String nom) throws SQLException, FormeInexistanteException {
-        Triangle triangle = null;
+    public Carre find(String nom) throws SQLException, FormeInexistanteException {
+        Carre carre = null;
         try {
             connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "SELECT * FROM Triangle WHERE Nom = ?";
+            String contenuRequete = "SELECT * FROM Carre WHERE Nom = ?";
             PreparedStatement requete = connect.prepareStatement(contenuRequete);
             requete.setString(1, nom);
             ResultSet resultat = requete.executeQuery();
-            if (resultat.next()){
-                triangle = new Triangle(
+            if(resultat.next()) {
+                carre = new Carre(
                         resultat.getString("Nom"),
-                        new Point(resultat.getInt("Pos1X"), resultat.getInt("Pos1Y")), new Point(resultat.getInt("Pos2X"), resultat.getInt("Pos2Y")), new Point(resultat.getInt("Pos3X"), resultat.getInt("Pos3Y")));
+                        new Point(resultat.getInt("PosX"), resultat.getInt("PosY")),
+                        resultat.getInt("Cote"));
             }
             else{
                 throw new FormeInexistanteException();
@@ -142,6 +144,18 @@ public class TriangleDAO extends DAO<Triangle>{
         }
         connect.commit();
         connect.close();
-        return triangle;
+        return carre;
+    }
+
+    public ArrayList<Carre> recuperationDonnees() throws SQLException {
+        ArrayList<Carre> donnees = new ArrayList<>();
+        connect = DriverManager.getConnection(dbURL);
+        String contenuRequete = "SELECT * FROM Carre";
+        PreparedStatement requete = connect.prepareStatement(contenuRequete);
+        ResultSet resultat = requete.executeQuery();
+        while(resultat.next()) {
+            donnees.add(new Carre(resultat.getString("Nom"), new Point(resultat.getInt("PosX"), resultat.getInt("PosY")), resultat.getInt("Cote")));
+        }
+        return donnees;
     }
 }

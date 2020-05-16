@@ -1,3 +1,8 @@
+package DAO;
+
+import Formes.Point;
+import Formes.Rectangle;
+
 import java.sql.*;
 
 public class RectangleDAO extends DAO<Rectangle> {

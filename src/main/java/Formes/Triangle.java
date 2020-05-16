@@ -1,8 +1,10 @@
+package Formes;
+
 public class Triangle extends Forme{
 
-    Point sommet1;
-    Point sommet2;
-    Point sommet3;
+    public Point sommet1;
+    public Point sommet2;
+    public Point sommet3;
 
     public Triangle(String nom, Point sommet1, Point sommet2, Point sommet3) {
         super(nom);
@@ -36,6 +38,6 @@ public class Triangle extends Forme{
     }
 
     public String toString(){
-        return("Triangle(sommet 1=" + sommet1+ ", sommet 2=" + sommet2+ ", sommet 3=" + sommet3 + ")");
+        return("Formes.Triangle(sommet 1=" + sommet1+ ", sommet 2=" + sommet2+ ", sommet 3=" + sommet3 + ")");
     }
 }

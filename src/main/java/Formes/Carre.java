@@ -1,6 +1,8 @@
+package Formes;
+
 public class Carre extends Forme{
 
-    int cote;
+    public int cote;
 
     public Carre(String nom, Point p, int cote) {
         super(nom, p);
@@ -12,7 +14,7 @@ public class Carre extends Forme{
     }
 
     public String toString(){
-        return ("Carre(position=" + p.toString() + ", cote=" + cote + ")");
+        return ("Formes.Carre(position=" + p.toString() + ", cote=" + cote + ")");
     }
 }
 

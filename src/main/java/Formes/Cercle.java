@@ -1,6 +1,8 @@
+package Formes;
+
 public class Cercle extends Forme{
 
-    int rayon;
+    public int rayon;
 
     public Cercle(String nom, Point p, int rayon){
         super(nom, p);
@@ -12,6 +14,6 @@ public class Cercle extends Forme{
     }
 
     public String toString(){
-        return("Cercle(centre=" + p.toString() + ", rayon=" + rayon + ")");
+        return("Formes.Cercle(centre=" + p.toString() + ", rayon=" + rayon + ")");
     }
 }

@@ -1,7 +1,13 @@
+import DAO.CarreDAO;
+import DAO.DAO;
+import DAO.FormeInexistanteException;
+import Formes.Carre;
+import Formes.Point;
 import org.junit.Test;
 
 
 import java.sql.SQLException;
+import DAO.FormeDejaExistenteException;
 
 import static org.junit.Assert.assertEquals;
 

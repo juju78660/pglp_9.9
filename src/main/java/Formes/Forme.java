@@ -1,6 +1,8 @@
+package Formes;
+
 public abstract class Forme {
-    Point p;
-    String nom;
+    public Point p;
+    public String nom;
 
     Forme(String nom, Point p){
         this.nom = nom;
@@ -11,6 +13,6 @@ public abstract class Forme {
         this.nom = nom;
     }
 
-    public abstract void deplacer(Point p);
+    public abstract void deplacer(Point p) throws CompositeFormeVideException;
     public abstract String toString();
 }

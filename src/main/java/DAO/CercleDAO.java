@@ -1,3 +1,8 @@
+package DAO;
+
+import Formes.Cercle;
+import Formes.Point;
+
 import java.sql.*;
 
 public class CercleDAO extends DAO<Cercle>{

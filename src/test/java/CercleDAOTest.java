@@ -1,6 +1,13 @@
+import DAO.CercleDAO;
+import DAO.DAO;
+import DAO.FormeDejaExistenteException;
+import Formes.Cercle;
+import Formes.Point;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import DAO.FormeInexistanteException;
+import DAO.FormeDejaExistenteException;
 
 import static org.junit.Assert.assertEquals;
 

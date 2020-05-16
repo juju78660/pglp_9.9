@@ -1,6 +1,12 @@
+import DAO.DAO;
+import DAO.FormeDejaExistenteException;
+import DAO.FormeInexistanteException;
+import Formes.Point;
+import Formes.Rectangle;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import DAO.RectangleDAO;
 
 import static org.junit.Assert.assertEquals;
 

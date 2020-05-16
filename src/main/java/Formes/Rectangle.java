@@ -1,7 +1,9 @@
+package Formes;
+
 public class Rectangle extends Forme {
 
-    int longueur;
-    int largeur;
+    public int longueur;
+    public int largeur;
 
     public Rectangle(String nom, Point p, int longueur, int largeur) {
         super(nom, p);
@@ -14,6 +16,6 @@ public class Rectangle extends Forme {
     }
 
     public String toString(){
-        return("Rectangle(position=" + p.toString() + ", longueur=" + longueur + ", largeur=" + largeur + ")");
+        return("Formes.Rectangle(position=" + p.toString() + ", longueur=" + longueur + ", largeur=" + largeur + ")");
     }
 }
