@@ -16,6 +16,8 @@ public class DAOTest {
     @Test (expected = FormeInexistanteException.class)
     public void testDAOInit() throws FormeInexistanteException, SQLException {
         DAO<Carre> carreDAO = new CarreDAO();
+        carreDAO.initBD();
+        carreDAO.init();
         Carre forme = new Carre("CarreTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -23,10 +25,10 @@ public class DAOTest {
         } catch (SQLException | FormeDejaExistenteException e) {
             e.printStackTrace();
         }
-        DAO<Carre> carreDAO2 = new CarreDAO();
-        Carre recupForme1 = null;
-        recupForme1 = carreDAO2.find("CarreTest");
 
+        carreDAO.initBD();
+        Carre recupForme1 = null;
+        recupForme1 = carreDAO.find("CarreTest");
 
         assertEquals(recupForme1, null);
     }

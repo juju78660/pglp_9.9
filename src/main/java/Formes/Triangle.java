@@ -38,6 +38,6 @@ public class Triangle extends Forme{
     }
 
     public String toString(){
-        return("Formes.Triangle(sommet 1=" + sommet1+ ", sommet 2=" + sommet2+ ", sommet 3=" + sommet3 + ")");
+        return("Triangle(sommet 1=" + sommet1+ ", sommet 2=" + sommet2+ ", sommet 3=" + sommet3 + ")");
     }
 }

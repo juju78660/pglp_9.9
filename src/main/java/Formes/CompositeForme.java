@@ -1,5 +1,6 @@
 package Formes;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +18,18 @@ public class CompositeForme extends Forme {
                 }
                 return contenu.substring(0, contenu.length()-1);
             }
-        } catch (Exception e) {
+        }
+        catch (CompositeFormeVideException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void ajouter(Forme forme){
-        groupeFormes.add(forme);
+    public void ajouter(Forme forme) throws CompositeFormeContientDejaException {
+        if(groupeFormes.contains(forme)){
+            throw new CompositeFormeContientDejaException();
+        }
+        else groupeFormes.add(forme);
     }
 
     public void deplacer(Point p) throws CompositeFormeVideException {

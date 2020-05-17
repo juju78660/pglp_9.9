@@ -15,7 +15,9 @@ public class CarreDAOTest {
     DAO<Carre> carreDAO = new CarreDAO();
 
     @Test
-    public void testCarreDAOCreate(){
+    public void testCarreDAOCreate() throws SQLException, FormeInexistanteException {
+        carreDAO.initBD();
+        carreDAO.init();
         Carre forme = new Carre("CarreTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -35,7 +37,9 @@ public class CarreDAOTest {
     }
 
     @Test
-    public void testCarreDAOUpdate(){
+    public void testCarreDAOUpdate() throws SQLException {
+        carreDAO.initBD();
+        carreDAO.init();
         Carre forme = new Carre("CarreTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -64,6 +68,8 @@ public class CarreDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCarreDAODelete() throws SQLException, FormeInexistanteException {
+        carreDAO.initBD();
+        carreDAO.init();
         Carre forme = new Carre("CarreTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -71,6 +77,7 @@ public class CarreDAOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        carreDAO.init();
 
         // DELETE
         try {
@@ -87,7 +94,9 @@ public class CarreDAOTest {
     }
 
     @Test (expected = FormeDejaExistenteException.class)
-    public void testCarreDAOCreateDejaExistant() throws FormeDejaExistenteException {
+    public void testCarreDAOCreateDejaExistant() throws FormeDejaExistenteException, SQLException, FormeInexistanteException {
+        carreDAO.initBD();
+        carreDAO.init();
         Carre forme = new Carre("CarreTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -107,6 +116,8 @@ public class CarreDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCarreDAOFindInexistant() throws FormeInexistanteException, SQLException {
+        carreDAO.initBD();
+        carreDAO.init();
         // FIND
         Carre recupForme1Update = null;
         recupForme1Update = carreDAO.find("CarreTest");
@@ -115,6 +126,8 @@ public class CarreDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCarreDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+        carreDAO.initBD();
+        carreDAO.init();
         // FIND
         Carre forme = new Carre("CarreTest", new Point(1, 2), 10);
         carreDAO.update(forme);

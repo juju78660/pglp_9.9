@@ -14,7 +14,9 @@ public class RectangleDAOTest {
     DAO<Rectangle> rectangleDAO = new RectangleDAO();
 
     @Test
-    public void testRectangleDAOCreate(){
+    public void testRectangleDAOCreate() throws SQLException {
+        rectangleDAO.initBD();
+        rectangleDAO.init();
         Rectangle forme = new Rectangle("RectangleTest", new Point(1, 2), 10, 20);
         // CREATE
         try {
@@ -34,9 +36,10 @@ public class RectangleDAOTest {
     }
 
     @Test
-    public void testRectangleDAOUpdate(){
+    public void testRectangleDAOUpdate() throws SQLException {
+        rectangleDAO.initBD();
+        rectangleDAO.init();
         Rectangle forme = new Rectangle("RectangleTest", new Point(1, 2), 10, 20);
-        DAO<Rectangle> rectangleDAO = new RectangleDAO();
         // CREATE
         try {
             rectangleDAO.create(forme);
@@ -64,8 +67,9 @@ public class RectangleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testRectangleDAODelete() throws SQLException, FormeInexistanteException {
+        rectangleDAO.initBD();
+        rectangleDAO.init();
         Rectangle forme = new Rectangle("RectangleTest", new Point(1, 2), 10, 20);
-        DAO<Rectangle> rectangleDAO = new RectangleDAO();
         // CREATE
         try {
             rectangleDAO.create(forme);
@@ -88,7 +92,9 @@ public class RectangleDAOTest {
     }
 
     @Test (expected = FormeDejaExistenteException.class)
-    public void testCarreDAOCreateDejaExistant() throws FormeDejaExistenteException {
+    public void testCarreDAOCreateDejaExistant() throws FormeDejaExistenteException, SQLException {
+        rectangleDAO.initBD();
+        rectangleDAO.init();
         Rectangle forme = new Rectangle("RectangleTest", new Point(1, 2), 10, 20);
         // CREATE
         try {
@@ -109,6 +115,8 @@ public class RectangleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testRectangleDAOFindInexistant() throws FormeInexistanteException, SQLException {
+        rectangleDAO.initBD();
+        rectangleDAO.init();
         // FIND
         Rectangle recupForme1Update = null;
         recupForme1Update = rectangleDAO.find("RectangleTest");
@@ -117,6 +125,8 @@ public class RectangleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testRectangleDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+        rectangleDAO.initBD();
+        rectangleDAO.init();
         // FIND
         Rectangle forme = new Rectangle("RectangleTest", new Point(1, 2), 10, 10);
         rectangleDAO.update(forme);

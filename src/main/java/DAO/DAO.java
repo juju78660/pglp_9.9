@@ -1,17 +1,52 @@
 package DAO;
 
+import Formes.Carre;
+import Formes.Point;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class DAO<T> {
     public Connection connect = null;
     String dbURL = "jdbc:derby:DB;create=true";
 
-    public DAO(){
-        initBD();
+    private void creationTables() throws SQLException {
+        connect = DriverManager.getConnection(dbURL);
+        PreparedStatement requete11 = this.connect.prepareStatement("DROP TABLE Carre");
+        requete11.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete12 = this.connect.prepareStatement("DROP TABLE Cercle");
+        requete12.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete13 = this.connect.prepareStatement("DROP TABLE Rectangle");
+        requete13.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete14 = this.connect.prepareStatement("DROP TABLE Triangle");
+        requete14.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete15 = this.connect.prepareStatement("DROP TABLE ListeFormes");
+        requete15.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete1 = this.connect.prepareStatement("CREATE TABLE Carre (Nom VARCHAR(50) NOT NULL, PosX VARCHAR(10) NOT NULL, PosY VARCHAR(10) NOT NULL, Cote INTEGER NOT NULL)");
+        requete1.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete2 = this.connect.prepareStatement("CREATE TABLE Cercle (Nom VARCHAR(50) NOT NULL, PosX VARCHAR(10) NOT NULL, PosY VARCHAR(10) NOT NULL, Rayon INTEGER NOT NULL)");
+        requete2.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete3 = this.connect.prepareStatement("CREATE TABLE Rectangle (Nom VARCHAR(50) NOT NULL, PosX VARCHAR(10) NOT NULL, PosY VARCHAR(10) NOT NULL, Longueur INTEGER NOT NULL, Largeur INTEGER NOT NULL)");
+        requete3.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete4 = this.connect.prepareStatement("CREATE TABLE Triangle (Nom VARCHAR(50) NOT NULL, Pos1X VARCHAR(10) NOT NULL, Pos1Y VARCHAR(10) NOT NULL, Pos2X VARCHAR(10) NOT NULL, Pos2Y VARCHAR(10) NOT NULL, Pos3X VARCHAR(10) NOT NULL, Pos3Y VARCHAR(10) NOT NULL)");
+        requete4.executeUpdate();
+        this.connect.commit();
+        PreparedStatement requete5BIS= this.connect.prepareStatement("CREATE TABLE ListeFormes (NomForme VARCHAR(50) NOT NULL, NomTable VARCHAR(50) NOT NULL)");
+        requete5BIS.executeUpdate();
+        this.connect.commit();
     }
 
-
-    private void initBD() {
+    public void initBD() throws SQLException {
         try{
             connect = DriverManager.getConnection(dbURL);
             PreparedStatement requete1 = this.connect.prepareStatement("TRUNCATE TABLE Carre");
@@ -26,6 +61,8 @@ public abstract class DAO<T> {
             PreparedStatement requete4 = this.connect.prepareStatement("TRUNCATE TABLE Triangle");
             requete4.executeUpdate();
 
+            PreparedStatement requete5 = this.connect.prepareStatement("TRUNCATE TABLE ListeFormes");
+            requete5.executeUpdate();
             this.connect.commit();
             connect.close();
         } catch (SQLException e) {
@@ -75,31 +112,29 @@ public abstract class DAO<T> {
         }
     }
 
-    /**
-     * Méthode de création
-     * @param obj
-     * @return boolean
-     */
+    public List<String> recupListeFormes() throws SQLException {
+        List<String> listeFormes = new ArrayList<>();
+
+        connect = DriverManager.getConnection(dbURL);
+        String contenuRequete = "SELECT * FROM ListeFormes";
+        PreparedStatement requete = connect.prepareStatement(contenuRequete);
+        ResultSet resultat = requete.executeQuery();
+        while(resultat.next()) {
+            listeFormes.add(resultat.getString("NomForme"));
+        }
+        return listeFormes;
+    }
+
     public abstract boolean create(T obj) throws FormeDejaExistenteException, SQLException;
 
-    /**
-     * Méthode pour effacer
-     * @param nom
-     * @return boolean
-     */
+
     public abstract boolean delete(String nom) throws SQLException, FormeInexistanteException;
 
-    /**
-     * Méthode de mise à jour
-     * @param obj
-     * @return boolean
-     */
+
     public abstract T update(T obj) throws SQLException, FormeInexistanteException;
 
-    /**
-     * Méthode de recherche des informations
-     * @param nom
-     * @return T
-     */
+
     public abstract T find(String nom) throws SQLException, FormeInexistanteException;
+
+    public abstract void init() throws SQLException;
 }

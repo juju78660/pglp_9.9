@@ -16,6 +16,6 @@ public class Rectangle extends Forme {
     }
 
     public String toString(){
-        return("Formes.Rectangle(position=" + p.toString() + ", longueur=" + longueur + ", largeur=" + largeur + ")");
+        return("Rectangle(position=" + p.toString() + ", longueur=" + longueur + ", largeur=" + largeur + ")");
     }
 }

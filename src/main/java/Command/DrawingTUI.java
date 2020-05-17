@@ -1,72 +1,50 @@
 package Command;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DrawingTUI {
 
-    DrawingTUI d = null;
+    private static DrawingTUI d = null;
+    private static Map<String, Commande> commandes;
 
-    private Map<String, Commande> commandes;
 
     public Commande nextCommand(String entree) throws CommandeException {
         Commande commande = null;
-        System.out.println("Entree:" + entree);
         entree = entree.replaceAll(" ", "");
-        System.out.println("Entree modif:" + entree);
-
-        if(entree.contains("=")){ // CREATION
-            System.out.println("creation");
-            commande = new CommandeCreation();
+        if(commandes.containsKey(entree)){
+            commande = commandes.get(entree);
+            commande.recupDonnees(entree);
         }
-        else if(entree.contains("(")) {
-            if(entree.contains("move")){
-                commande = new CommandeDeplacement();
-            }
-            else if(entree.contains("remove")){
-                commande = new CommandeSuppression();
-            }
-            else if(entree.contains("print")){
-                commande = new CommandeAffichage();
-            }
-            else if(entree.contains("createGroup")){
-                commande = new CommandeCreationGroupe();
-            }
-            else if(entree.contains("deleteGroup")){
-                commande = new CommandeSuppressionGroupe();
-            }
-            else if(entree.contains("addDataGroup")){
-                commande = new CommandeAjoutFormeGroupe();
-            }
-            else if(entree.contains("removeDataGroup")){
-                commande = new CommandeSuppressionFormeGroupe();
-            }
-        }
-        else if(entree.contains("stop")){
-            commande = new CommandeStop();
+        else if (entree.contains("=")){
+            commande = commandes.get("=");
+            commande.recupDonnees(entree);
         }
         else{
-            throw new CommandeException("No command registered for " + entree);
+            throw new CommandeException("La commande entrée n'existe pas");
         }
         return commande;
     }
 
     public void addCommand(String name, Commande commande) {
-        this.commandes.put(name, commande);
+        commandes.put(name, commande);
     }
 
-    public void executeCommand(String name) throws CommandeException {
-        if(this.commandes.containsKey(name)){
-            this.commandes.get(name).execute();
-        }
-        else{
-            throw new CommandeException("La commande entrée n'existe pas");
-        }
-    }
 
-    public DrawingTUI init() {
+    public static DrawingTUI init() throws SQLException {
         d = new DrawingTUI();
         commandes = new HashMap<>();
+        d.addCommand("=", new CommandeCreation());
+        d.addCommand("move", new CommandeDeplacement());
+        d.addCommand("remove", new CommandeSuppression());
+        d.addCommand("print", new CommandeAffichage());
+        d.addCommand("createGroup", new CommandeCreationGroupe());
+        d.addCommand("deleteGroup", new CommandeSuppressionGroupe());
+        d.addCommand("addDataGroup", new CommandeAjoutFormeGroupe());
+        d.addCommand("removeDataGroup", new CommandeSuppressionFormeGroupe());
+        d.addCommand("stop", new CommandeStop());
+
         return d;
     }
 

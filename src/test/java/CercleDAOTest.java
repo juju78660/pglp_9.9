@@ -15,7 +15,9 @@ public class CercleDAOTest {
     DAO<Cercle> cercleDAO = new CercleDAO();
 
     @Test
-    public void testCercleDAOCreate(){
+    public void testCercleDAOCreate() throws SQLException, FormeInexistanteException {
+        cercleDAO.initBD();
+        cercleDAO.init();
         Cercle forme = new Cercle("CercleTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -35,9 +37,10 @@ public class CercleDAOTest {
     }
 
     @Test
-    public void testCercleDAOUpdate(){
+    public void testCercleDAOUpdate() throws SQLException {
+        cercleDAO.initBD();
+        cercleDAO.init();
         Cercle forme = new Cercle("CercleTest", new Point(1, 2), 10);
-        DAO<Cercle> cercleDAO = new CercleDAO();
         // CREATE
         try {
             cercleDAO.create(forme);
@@ -65,6 +68,8 @@ public class CercleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCercleDAODelete() throws SQLException, FormeInexistanteException {
+        cercleDAO.initBD();
+        cercleDAO.init();
         Cercle forme = new Cercle("CercleTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -88,7 +93,9 @@ public class CercleDAOTest {
     }
 
     @Test (expected = FormeDejaExistenteException.class)
-    public void testCercleDAOCreateDejaExistant() throws FormeDejaExistenteException {
+    public void testCercleDAOCreateDejaExistant() throws FormeDejaExistenteException, SQLException {
+        cercleDAO.initBD();
+        cercleDAO.init();
         Cercle forme = new Cercle("CercleTest", new Point(1, 2), 10);
         // CREATE
         try {
@@ -108,6 +115,8 @@ public class CercleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCercleDAOFindInexistant() throws FormeInexistanteException, SQLException {
+        cercleDAO.initBD();
+        cercleDAO.init();
         // FIND
         Cercle recupForme1Update = null;
         recupForme1Update = cercleDAO.find("CercleTest");
@@ -116,6 +125,8 @@ public class CercleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCercleDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+        cercleDAO.initBD();
+        cercleDAO.init();
         // FIND
         Cercle forme = new Cercle("CercleTest", new Point(1, 2), 10);
         cercleDAO.update(forme);

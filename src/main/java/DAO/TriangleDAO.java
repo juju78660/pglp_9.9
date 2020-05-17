@@ -1,6 +1,9 @@
 package DAO;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import Formes.Point;
 import Formes.Triangle;
@@ -8,43 +11,37 @@ import Formes.Triangle;
 public class TriangleDAO extends DAO<Triangle>{
     private Connection connect = null;
     private String dbURL = "jdbc:derby:DB;create=true";
+    private Map<String, Triangle> listeTriangles;
 
     @Override
     public boolean create(Triangle obj) throws FormeDejaExistenteException, SQLException {
-        boolean objetDejaExistant = false;
-        try {
-            connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "SELECT * FROM Triangle WHERE Nom = ?";
-            PreparedStatement requete = connect.prepareStatement(contenuRequete);
-            requete.setString(1, obj.nom);
-            ResultSet resultat = requete.executeQuery();
-            if (resultat.next()) {
-                objetDejaExistant = true;
-                resultat.close();
-                requete.close();
-                connect.commit();
-                connect.close();
-                throw new FormeDejaExistenteException();
-            }
-            resultat.close();
-            requete.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if (!objetDejaExistant) {
-            String contenuRequete = "INSERT INTO Triangle (Nom, Pos1X, Pos1Y, Pos2X, Pos2Y, Pos3X, Pos3Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        if(!listeTriangles.containsKey(obj.nom)){
+            listeTriangles.put(obj.nom, obj);
+            String contenuRequete = "INSERT INTO ListeFormes (NomForme, NomTable) VALUES (?, ?)";
             PreparedStatement requete = null;
             try {
                 requete = connect.prepareStatement(contenuRequete);
                 requete.setString(1, obj.nom);
-                requete.setInt(2, obj.sommet1.x);
-                requete.setInt(3, obj.sommet1.y);
-                requete.setInt(4, obj.sommet2.x);
-                requete.setInt(5, obj.sommet2.y);
-                requete.setInt(6, obj.sommet3.x);
-                requete.setInt(7, obj.sommet3.y);
+                requete.setString(2, "Triangle");
                 requete.executeUpdate();
                 requete.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            connect.commit();
+            String contenuRequete2 = "INSERT INTO Triangle (Nom, Pos1X, Pos1Y, Pos2X, Pos2Y, Pos3X, Pos3Y) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement requete2 = null;
+            try {
+                requete2 = connect.prepareStatement(contenuRequete2);
+                requete2.setString(1, obj.nom);
+                requete2.setInt(2, obj.sommet1.x);
+                requete2.setInt(3, obj.sommet1.y);
+                requete2.setInt(4, obj.sommet2.x);
+                requete2.setInt(5, obj.sommet2.y);
+                requete2.setInt(6, obj.sommet3.x);
+                requete2.setInt(7, obj.sommet3.y);
+                requete2.executeUpdate();
+                requete2.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -52,9 +49,7 @@ public class TriangleDAO extends DAO<Triangle>{
             connect.close();
             return true;
         }
-        connect.commit();
-        connect.close();
-        return false;
+        else throw new FormeDejaExistenteException();
     }
 
     @Override
@@ -66,6 +61,7 @@ public class TriangleDAO extends DAO<Triangle>{
             requete.setString(1, nom);
             requete.executeUpdate();
             requete.close();
+            listeTriangles.remove(nom);
         } catch (SQLException e) {
             e.printStackTrace();
             connect.commit();
@@ -78,26 +74,7 @@ public class TriangleDAO extends DAO<Triangle>{
 
     @Override
     public Triangle update(Triangle obj) throws SQLException, FormeInexistanteException {
-        boolean objetDejaExistant = false;
-        try {
-            connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "SELECT * FROM Triangle WHERE Nom = ?";
-            PreparedStatement requete = connect.prepareStatement(contenuRequete);
-            requete.setString(1, obj.nom);
-            ResultSet resultat = requete.executeQuery();
-            if(resultat.next()) {
-                objetDejaExistant = true;
-                resultat.close();
-                requete.close();
-                connect.commit();
-                connect.close();
-            }
-            resultat.close();
-            requete.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if(objetDejaExistant) {
+        if(listeTriangles.containsKey(obj.nom)){
             try {
                 connect = DriverManager.getConnection(dbURL);
                 String contenuRequete = "UPDATE Triangle SET Pos1X = ?, Pos1Y = ?, Pos2X = ?, Pos2Y = ?, Pos3X = ?, Pos3Y = ? WHERE Nom = ?";
@@ -111,6 +88,7 @@ public class TriangleDAO extends DAO<Triangle>{
                 requete.setString(7, obj.nom);
                 requete.executeUpdate();
                 requete.close();
+                listeTriangles.replace(obj.nom, obj);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -148,5 +126,24 @@ public class TriangleDAO extends DAO<Triangle>{
         connect.commit();
         connect.close();
         return triangle;
+    }
+
+    @Override
+    public void init() throws SQLException {
+        recuperationDonnees();
+    }
+
+    public ArrayList<Triangle> recuperationDonnees() throws SQLException {
+        ArrayList<Triangle> donnees = new ArrayList<>();
+        listeTriangles = new HashMap<>();
+        connect = DriverManager.getConnection(dbURL);
+        String contenuRequete = "SELECT * FROM Triangle";
+        PreparedStatement requete = connect.prepareStatement(contenuRequete);
+        ResultSet resultat = requete.executeQuery();
+        while(resultat.next()) {
+            donnees.add(new Triangle(resultat.getString("Nom"), new Point(resultat.getInt("Pos1X"), resultat.getInt("Pos1Y")), new Point(resultat.getInt("Pos2X"), resultat.getInt("Pos2Y")), new Point(resultat.getInt("Pos3X"), resultat.getInt("Pos3Y"))));
+            listeTriangles.put(resultat.getString("Nom"), new Triangle(resultat.getString("Nom"), new Point(resultat.getInt("Pos1X"), resultat.getInt("Pos1Y")), new Point(resultat.getInt("Pos2X"), resultat.getInt("Pos2Y")), new Point(resultat.getInt("Pos3X"), resultat.getInt("Pos3Y"))));
+        }
+        return donnees;
     }
 }

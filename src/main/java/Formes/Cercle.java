@@ -14,6 +14,6 @@ public class Cercle extends Forme{
     }
 
     public String toString(){
-        return("Formes.Cercle(centre=" + p.toString() + ", rayon=" + rayon + ")");
+        return("Cercle(centre=" + p.toString() + ", rayon=" + rayon + ")");
     }
 }

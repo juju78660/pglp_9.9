@@ -14,7 +14,7 @@ public class Carre extends Forme{
     }
 
     public String toString(){
-        return ("Formes.Carre(position=" + p.toString() + ", cote=" + cote + ")");
+        return ("Carre(position=" + p.toString() + ", cote=" + cote + ")");
     }
 }
 

@@ -14,7 +14,9 @@ public class TriangleDAOTest {
     DAO<Triangle> triangleDAO = new TriangleDAO();
 
     @Test
-    public void testTriangleDAOCreate(){
+    public void testTriangleDAOCreate() throws SQLException {
+        triangleDAO.initBD();
+        triangleDAO.init();
         Triangle forme = new Triangle("TriangleTest", new Point(1, 2), new Point(3, 4),new Point(5, 6));
         // CREATE
         try {
@@ -33,9 +35,10 @@ public class TriangleDAOTest {
     }
 
     @Test
-    public void testTriangleDAOUpdate(){
+    public void testTriangleDAOUpdate() throws SQLException {
+        triangleDAO.initBD();
+        triangleDAO.init();
         Triangle forme = new Triangle("TriangleTest", new Point(1, 2), new Point(3, 4),new Point(5, 6));
-        DAO<Triangle> triangleDAO = new TriangleDAO();
         // CREATE
         try {
             triangleDAO.create(forme);
@@ -63,8 +66,9 @@ public class TriangleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testTriangleDAODelete() throws SQLException, FormeInexistanteException {
+        triangleDAO.initBD();
+        triangleDAO.init();
         Triangle forme = new Triangle("TriangleTest", new Point(1, 2), new Point(3, 4),new Point(5, 6));
-        DAO<Triangle> triangleDAO = new TriangleDAO();
         // CREATE
         try {
             triangleDAO.create(forme);
@@ -88,7 +92,9 @@ public class TriangleDAOTest {
     }
 
     @Test (expected = FormeDejaExistenteException.class)
-    public void testCarreDAOCreateDejaExistant() throws FormeDejaExistenteException {
+    public void testCarreDAOCreateDejaExistant() throws FormeDejaExistenteException, SQLException {
+        triangleDAO.initBD();
+        triangleDAO.init();
         Triangle forme = new Triangle("TriangleTest", new Point(1, 2), new Point(3, 4),new Point(5, 6));
         // CREATE
         try {
@@ -109,6 +115,8 @@ public class TriangleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCercleDAOFindInexistant() throws FormeInexistanteException, SQLException {
+        triangleDAO.initBD();
+        triangleDAO.init();
         // FIND
         Triangle recupForme1Update = null;
         recupForme1Update = triangleDAO.find("TriangleTest");
@@ -117,6 +125,8 @@ public class TriangleDAOTest {
 
     @Test (expected = FormeInexistanteException.class)
     public void testCercleDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+        triangleDAO.initBD();
+        triangleDAO.init();
         // FIND
         Triangle forme = new Triangle("TriangleTest", new Point(1, 2), new Point(3, 4),new Point(5, 6));
         triangleDAO.update(forme);
