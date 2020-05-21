@@ -47,14 +47,14 @@ public class CarreDAO extends DAO<Carre>{
             connect.close();
             return true;
         }
-        else throw new FormeDejaExistenteException();
+        else throw new FormeDejaExistenteException("L'objet");
     }
 
     @Override
     public boolean delete(String nom) throws SQLException {
         try {
             connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "DELETE FROM Carre WHERE nom = ?";
+            String contenuRequete = "DELETE FROM Carre WHERE Nom = ?";
             PreparedStatement requete = connect.prepareStatement(contenuRequete);
             requete.setString(1, nom);
             requete.executeUpdate();
@@ -63,6 +63,20 @@ public class CarreDAO extends DAO<Carre>{
         } catch (SQLException e) {
             e.printStackTrace();
             connect.close();
+            return false;
+        }
+        connect.commit();
+        connect.close();
+
+        try {
+            connect = DriverManager.getConnection(dbURL);
+            String contenuRequete = "DELETE FROM ListeFormes WHERE NomForme = ?";
+            PreparedStatement requete = connect.prepareStatement(contenuRequete);
+            requete.setString(1, nom);
+            requete.executeUpdate();
+            requete.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
         connect.commit();
@@ -99,6 +113,8 @@ public class CarreDAO extends DAO<Carre>{
     @Override
     public Carre find(String nom) throws SQLException, FormeInexistanteException {
         Carre carre = null;
+        CarreDAO c = new CarreDAO();
+        c.init();
         try {
             connect = DriverManager.getConnection(dbURL);
             String contenuRequete = "SELECT * FROM Carre WHERE Nom = ?";

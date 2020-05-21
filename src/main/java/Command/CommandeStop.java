@@ -16,7 +16,7 @@ public class CommandeStop implements Commande {
     public void recupDonnees(String donnees) { }
 
     @Override
-    public void print() throws SQLException, FormeInexistanteException {
-
+    public void print(){
+        System.out.println("Arret du programme demande");
     }
 }

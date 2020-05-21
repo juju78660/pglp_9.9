@@ -96,18 +96,18 @@ public abstract class DAO<T> {
 
             ResultSetMetaData resultMeta = resultat.getMetaData();
 
-            System.out.println("\n**********************************");
+            System.out.println("\n**************************************************");
             //On affiche le nom des colonnes
             for(int i = 1; i <= resultMeta.getColumnCount(); i++)
                 System.out.print("\t" + resultMeta.getColumnName(i).toUpperCase() + "\t *");
 
-            System.out.println("\n**********************************");
+            System.out.println("\n**************************************************");
 
             while(resultat.next()){
                 for(int i = 1; i <= resultMeta.getColumnCount(); i++)
                     System.out.print("\t" + resultat.getObject(i).toString() + "\t |");
 
-                System.out.println("\n---------------------------------");
+                System.out.println("\n-----------------------------------------------");
 
             }
             resultat.close();

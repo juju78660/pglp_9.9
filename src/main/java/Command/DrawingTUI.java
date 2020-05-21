@@ -13,11 +13,11 @@ public class DrawingTUI {
         Commande commande = null;
         entree = entree.replaceAll(" ", "");
 
-        if (entree.contains("=")){
+        if (entree.contains("=")){  // CREATION
             commande = commandes.get("=");
             commande.recupDonnees(entree);
         }
-        else if(commandes.containsKey(entree.split("\\(")[0])){
+        else if(commandes.containsKey(entree.split("\\(")[0])){ // AUTRE COMMANDE
             commande = commandes.get(entree.split("\\(")[0]);
             commande.recupDonnees(entree);
         }
@@ -46,9 +46,5 @@ public class DrawingTUI {
         d.addCommand("stop", new CommandeStop());
 
         return d;
-    }
-
-    public void print(){
-
     }
 }

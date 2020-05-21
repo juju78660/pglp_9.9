@@ -23,7 +23,7 @@ public class DrawingApp {
             c.execute();
             // AFFICHAGE
             c.print();
-            System.out.println("-----------------------------");
+            System.out.println("    -      -      -      -      -");
         }
     }
 

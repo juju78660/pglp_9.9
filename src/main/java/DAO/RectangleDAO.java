@@ -47,14 +47,14 @@ public class RectangleDAO extends DAO<Rectangle> {
             connect.close();
             return true;
         }
-        else throw new FormeDejaExistenteException();
+        else throw new FormeDejaExistenteException("L'objet");
     }
 
     @Override
     public boolean delete(String nom) throws SQLException {
         try {
             connect = DriverManager.getConnection(dbURL);
-            String contenuRequete = "DELETE FROM Rectangle WHERE nom = ?";
+            String contenuRequete = "DELETE FROM Rectangle WHERE Nom = ?";
             PreparedStatement requete = connect.prepareStatement(contenuRequete);
             requete.setString(1, nom);
             requete.executeUpdate();
@@ -63,6 +63,21 @@ public class RectangleDAO extends DAO<Rectangle> {
         } catch (SQLException e) {
             e.printStackTrace();
             connect.commit();
+            connect.close();
+            return false;
+        }
+        connect.commit();
+        connect.close();
+
+        try {
+            connect = DriverManager.getConnection(dbURL);
+            String contenuRequete = "DELETE FROM ListeFormes WHERE NomForme = ?";
+            PreparedStatement requete = connect.prepareStatement(contenuRequete);
+            requete.setString(1, nom);
+            requete.executeUpdate();
+            requete.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
         connect.commit();

@@ -5,7 +5,7 @@ import Formes.Forme;
 
 import java.sql.SQLException;
 import java.util.Map;
-
+// MARCHE
 public class CommandeAffichage implements Commande {
     String nomForme = "";
     String typeForme = "";
@@ -15,6 +15,7 @@ public class CommandeAffichage implements Commande {
     CercleDAO cercleDAO = new CercleDAO();
     RectangleDAO rectangleDAO = new RectangleDAO();
     TriangleDAO triangleDAO = new TriangleDAO();
+    CompositeFormeDAO compositeFormeDAO = new CompositeFormeDAO();
 
     @Override
     public void execute() throws SQLException, FormeInexistanteException {
@@ -24,8 +25,12 @@ public class CommandeAffichage implements Commande {
     }
 
     @Override
-    public void recupDonnees(String donnees) {
-        nomForme = donnees.split("\\(")[1].replace(")", "");
+    public void recupDonnees(String donnees) throws CommandeException {
+        try{
+            nomForme = donnees.split("\\(")[1].replace(")", "");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new CommandeException("La commande n'est pas correctement entree (ex: print(nomForme)");
+        }
     }
 
     @Override
@@ -46,6 +51,10 @@ public class CommandeAffichage implements Commande {
                 break;
             case "Triangle":
                 recupForme = triangleDAO.find(nomForme);
+                System.out.println(recupForme.toString());
+                break;
+            case "Composite":
+                recupForme = compositeFormeDAO.find(nomForme);
                 System.out.println(recupForme.toString());
                 break;
         }

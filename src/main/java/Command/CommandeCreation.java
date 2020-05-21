@@ -6,7 +6,7 @@ import Formes.*;
 
 import java.sql.SQLException;
 import java.util.Map;
-
+// MARCHE
 public class CommandeCreation implements Commande {
     String nomForme = "";
     String typeForme = "";
@@ -76,11 +76,15 @@ public class CommandeCreation implements Commande {
     }
 
     @Override
-    public void recupDonnees(String donnees) {
-        nomForme = donnees.split("=")[0];
-        donneesForme = donnees.split("=")[1];
-        typeForme = donneesForme.split("\\(")[0];
-        donneesForme = donneesForme.replace(donneesForme.split("\\(")[0], "");
+    public void recupDonnees(String donnees) throws CommandeException {
+        try {
+            nomForme = donnees.split("=")[0];
+            donneesForme = donnees.split("=")[1];
+            typeForme = donneesForme.split("\\(")[0];
+            donneesForme = donneesForme.replace(donneesForme.split("\\(")[0], "");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new CommandeException("La commande n'est pas correctement entree (ex: carre=Carre(NomForme, PosX, PosY, Cote");
+        }
     }
 
     @Override
@@ -104,7 +108,6 @@ public class CommandeCreation implements Commande {
                 System.out.println("Forme cree: " + recupForme.toString());
                 break;
         }
-        recupForme.toString();
     }
     //      c1=Carre((1,10),30)
     //      c1=Cercle((1,10),30)

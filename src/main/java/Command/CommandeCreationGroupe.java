@@ -11,16 +11,18 @@ public class CommandeCreationGroupe implements Commande {
     String nomGroupe = "";
     Map<String, String> listeFormes;
 
-    CarreDAO carreDAO = new CarreDAO();
+    CompositeFormeDAO compositeFormeDAO = new CompositeFormeDAO();
 
     @Override
-    public void execute() throws SQLException, NomDejaUtiliseException {
-        listeFormes = carreDAO.recupListeFormes();
+    public void execute() throws SQLException, NomDejaUtiliseException, FormeDejaExistenteException {
+        listeFormes = compositeFormeDAO.recupListeFormes();
         if(listeFormes.containsKey(nomGroupe)) throw new NomDejaUtiliseException();
         else{
-            CompositeForme c = new CompositeForme(nomGroupe);
+            CompositeForme compositeForme = new CompositeForme(nomGroupe);
+            listeFormes.put(nomGroupe, "Composite");
+            compositeFormeDAO.init();
+            compositeFormeDAO.create(compositeForme);
         }
-
     }
 
     @Override
@@ -33,7 +35,7 @@ public class CommandeCreationGroupe implements Commande {
     }
 
     @Override
-    public void print() throws SQLException, FormeInexistanteException {
-
+    public void print(){
+        System.out.println("Le composite " + nomGroupe + " a ete cree");
     }
 }

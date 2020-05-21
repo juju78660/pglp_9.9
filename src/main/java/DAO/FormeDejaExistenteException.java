@@ -1,7 +1,7 @@
 package DAO;
 
 public class FormeDejaExistenteException extends Exception{
-    public FormeDejaExistenteException() {
-        super();
+    public FormeDejaExistenteException(String s) {
+        super(s);
     }
 }
