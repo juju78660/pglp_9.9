@@ -94,7 +94,7 @@ public class TriangleDAO extends DAO<Triangle>{
             }
         }
         else{
-            throw new FormeInexistanteException();
+            throw new FormeInexistanteException("La forme " + obj.nom + " n'existe pas");
         }
         connect.commit();
         connect.close();
@@ -116,7 +116,7 @@ public class TriangleDAO extends DAO<Triangle>{
                         new Point(resultat.getInt("Pos1X"), resultat.getInt("Pos1Y")), new Point(resultat.getInt("Pos2X"), resultat.getInt("Pos2Y")), new Point(resultat.getInt("Pos3X"), resultat.getInt("Pos3Y")));
             }
             else{
-                throw new FormeInexistanteException();
+                throw new FormeInexistanteException("La forme " + nom + " n'existe pas");
             }
             resultat.close();
             requete.close();

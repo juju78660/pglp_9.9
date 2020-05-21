@@ -1,4 +1,6 @@
+import Command.CommandeException;
 import DAO.DAO;
+import Formes.CompositeFormeVideException;
 import Formes.Point;
 import Formes.Triangle;
 import org.junit.Test;
@@ -124,7 +126,7 @@ public class TriangleDAOTest {
     }
 
     @Test (expected = FormeInexistanteException.class)
-    public void testCercleDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+    public void testCercleDAOUpdateInexistant() throws FormeInexistanteException, SQLException, FormeDejaExistenteException, CommandeException, CompositeFormeVideException {
         triangleDAO.initBD();
         triangleDAO.init();
         // FIND

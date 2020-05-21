@@ -93,7 +93,7 @@ public class RectangleDAO extends DAO<Rectangle> {
             return obj;
         }
         else{
-            throw new FormeInexistanteException();
+            throw new FormeInexistanteException("La forme " + obj.nom + " n'existe pas");
         }
     }
 
@@ -113,7 +113,7 @@ public class RectangleDAO extends DAO<Rectangle> {
                         resultat.getInt("Longueur"), resultat.getInt("Largeur"));
             }
             else{
-                throw new FormeInexistanteException();
+                throw new FormeInexistanteException("La forme " + nom + " n'existe pas");
             }
             resultat.close();
             requete.close();

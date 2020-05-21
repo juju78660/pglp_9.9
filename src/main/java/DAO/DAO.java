@@ -1,12 +1,12 @@
 package DAO;
 
-import Formes.Carre;
-import Formes.Point;
+import Command.CommandeException;
+import Formes.CompositeFormeVideException;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DAO<T> {
     public Connection connect = null;
@@ -41,14 +41,17 @@ public abstract class DAO<T> {
         PreparedStatement requete4 = this.connect.prepareStatement("CREATE TABLE Triangle (Nom VARCHAR(50) NOT NULL, Pos1X VARCHAR(10) NOT NULL, Pos1Y VARCHAR(10) NOT NULL, Pos2X VARCHAR(10) NOT NULL, Pos2Y VARCHAR(10) NOT NULL, Pos3X VARCHAR(10) NOT NULL, Pos3Y VARCHAR(10) NOT NULL)");
         requete4.executeUpdate();
         this.connect.commit();
-        PreparedStatement requete5BIS= this.connect.prepareStatement("CREATE TABLE ListeFormes (NomForme VARCHAR(50) NOT NULL, NomTable VARCHAR(50) NOT NULL)");
-        requete5BIS.executeUpdate();
+        PreparedStatement requete5= this.connect.prepareStatement("CREATE TABLE ListeFormes (NomForme VARCHAR(50) NOT NULL, NomTable VARCHAR(50) NOT NULL)");
+        requete5.executeUpdate();
         this.connect.commit();
+        connect = DriverManager.getConnection(dbURL);
+        PreparedStatement requete6 = this.connect.prepareStatement("CREATE TABLE Composite (NomComposite VARCHAR(50) NOT NULL, NomForme VARCHAR(50) NOT NULL, TableForme VARCHAR(50) NOT NULL)");
+        requete6.executeUpdate();
     }
 
     public void initBD() throws SQLException {
+        connect = DriverManager.getConnection(dbURL);
         try{
-            connect = DriverManager.getConnection(dbURL);
             PreparedStatement requete1 = this.connect.prepareStatement("TRUNCATE TABLE Carre");
             requete1.executeUpdate();
 
@@ -63,6 +66,9 @@ public abstract class DAO<T> {
 
             PreparedStatement requete5 = this.connect.prepareStatement("TRUNCATE TABLE ListeFormes");
             requete5.executeUpdate();
+
+            PreparedStatement requete6 = this.connect.prepareStatement("TRUNCATE TABLE Composite");
+            requete6.executeUpdate();
             this.connect.commit();
             connect.close();
         } catch (SQLException e) {
@@ -112,15 +118,15 @@ public abstract class DAO<T> {
         }
     }
 
-    public List<String> recupListeFormes() throws SQLException {
-        List<String> listeFormes = new ArrayList<>();
+    public Map<String, String> recupListeFormes() throws SQLException {
+        Map<String, String> listeFormes = new HashMap();
 
         connect = DriverManager.getConnection(dbURL);
         String contenuRequete = "SELECT * FROM ListeFormes";
         PreparedStatement requete = connect.prepareStatement(contenuRequete);
         ResultSet resultat = requete.executeQuery();
         while(resultat.next()) {
-            listeFormes.add(resultat.getString("NomForme"));
+            listeFormes.put(resultat.getString("NomForme"), resultat.getString("NomTable"));
         }
         return listeFormes;
     }
@@ -131,7 +137,7 @@ public abstract class DAO<T> {
     public abstract boolean delete(String nom) throws SQLException, FormeInexistanteException;
 
 
-    public abstract T update(T obj) throws SQLException, FormeInexistanteException;
+    public abstract T update(T obj) throws SQLException, FormeInexistanteException, FormeDejaExistenteException, CommandeException, CompositeFormeVideException;
 
 
     public abstract T find(String nom) throws SQLException, FormeInexistanteException;

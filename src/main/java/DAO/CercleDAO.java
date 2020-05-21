@@ -1,6 +1,5 @@
 package DAO;
 
-import Formes.Carre;
 import Formes.Cercle;
 import Formes.Point;
 
@@ -92,7 +91,7 @@ public class CercleDAO extends DAO<Cercle>{
             return obj;
         }
         else{
-            throw new FormeInexistanteException();
+            throw new FormeInexistanteException("La forme " + obj.nom + " n'existe pas");
         }
     }
 
@@ -112,7 +111,7 @@ public class CercleDAO extends DAO<Cercle>{
                         resultat.getInt("Rayon"));
             }
             else{
-                throw new FormeInexistanteException();
+                throw new FormeInexistanteException("La forme " + nom + " n'existe pas");
             }
             resultat.close();
             requete.close();

@@ -1,6 +1,8 @@
+import Command.CommandeException;
 import DAO.DAO;
 import DAO.FormeDejaExistenteException;
 import DAO.FormeInexistanteException;
+import Formes.CompositeFormeVideException;
 import Formes.Point;
 import Formes.Rectangle;
 import org.junit.Test;
@@ -124,7 +126,7 @@ public class RectangleDAOTest {
     }
 
     @Test (expected = FormeInexistanteException.class)
-    public void testRectangleDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+    public void testRectangleDAOUpdateInexistant() throws FormeInexistanteException, SQLException, FormeDejaExistenteException, CommandeException, CompositeFormeVideException {
         rectangleDAO.initBD();
         rectangleDAO.init();
         // FIND

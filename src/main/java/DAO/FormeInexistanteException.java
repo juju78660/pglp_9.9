@@ -1,7 +1,7 @@
 package DAO;
 
 public class FormeInexistanteException extends Exception {
-    public FormeInexistanteException() {
-        super();
+    public FormeInexistanteException(String s) {
+        super(s);
     }
 }

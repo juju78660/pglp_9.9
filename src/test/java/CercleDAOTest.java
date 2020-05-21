@@ -1,7 +1,9 @@
+import Command.CommandeException;
 import DAO.CercleDAO;
 import DAO.DAO;
 import DAO.FormeDejaExistenteException;
 import Formes.Cercle;
+import Formes.CompositeFormeVideException;
 import Formes.Point;
 import org.junit.Test;
 
@@ -124,7 +126,7 @@ public class CercleDAOTest {
     }
 
     @Test (expected = FormeInexistanteException.class)
-    public void testCercleDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+    public void testCercleDAOUpdateInexistant() throws FormeInexistanteException, SQLException, FormeDejaExistenteException, CommandeException, CompositeFormeVideException {
         cercleDAO.initBD();
         cercleDAO.init();
         // FIND

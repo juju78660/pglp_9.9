@@ -1,8 +1,10 @@
+import Command.CommandeException;
 import DAO.CarreDAO;
 import DAO.DAO;
 import DAO.FormeDejaExistenteException;
 import DAO.FormeInexistanteException;
 import Formes.Carre;
+import Formes.CompositeFormeVideException;
 import Formes.Point;
 import org.junit.Test;
 
@@ -125,7 +127,7 @@ public class CarreDAOTest {
     }
 
     @Test (expected = FormeInexistanteException.class)
-    public void testCarreDAOUpdateInexistant() throws FormeInexistanteException, SQLException {
+    public void testCarreDAOUpdateInexistant() throws FormeInexistanteException, SQLException, FormeDejaExistenteException, CommandeException, CompositeFormeVideException {
         carreDAO.initBD();
         carreDAO.init();
         // FIND

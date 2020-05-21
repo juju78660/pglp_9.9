@@ -9,16 +9,16 @@ public class DrawingTUI {
     private static DrawingTUI d = null;
     private static Map<String, Commande> commandes;
 
-
     public Commande nextCommand(String entree) throws CommandeException {
         Commande commande = null;
         entree = entree.replaceAll(" ", "");
-        if(commandes.containsKey(entree)){
-            commande = commandes.get(entree);
+
+        if (entree.contains("=")){
+            commande = commandes.get("=");
             commande.recupDonnees(entree);
         }
-        else if (entree.contains("=")){
-            commande = commandes.get("=");
+        else if(commandes.containsKey(entree.split("\\(")[0])){
+            commande = commandes.get(entree.split("\\(")[0]);
             commande.recupDonnees(entree);
         }
         else{

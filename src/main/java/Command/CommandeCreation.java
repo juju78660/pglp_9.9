@@ -5,18 +5,18 @@ import DAO.*;
 import Formes.*;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
 public class CommandeCreation implements Commande {
     String nomForme = "";
     String typeForme = "";
     String donneesForme = "";
+    Map<String, String> listeFormes;
 
     CarreDAO carreDAO = new CarreDAO();
     CercleDAO cercleDAO = new CercleDAO();
     RectangleDAO rectangleDAO = new RectangleDAO();
     TriangleDAO triangleDAO = new TriangleDAO();
-    private List<String> listeFormes;
 
     @Override
     public void execute() throws FormeDejaExistenteException, SQLException, CommandeException, NomDejaUtiliseException {
@@ -27,7 +27,7 @@ public class CommandeCreation implements Commande {
         String point2Y;
         String point3X;
         String point3Y;
-        if(listeFormes.contains(nomForme)) throw new NomDejaUtiliseException();
+        if(listeFormes.containsKey(nomForme)) throw new NomDejaUtiliseException();
         else{
             switch(typeForme){
                 case "Carre":

@@ -92,9 +92,8 @@ public class CarreDAO extends DAO<Carre>{
             return obj;
         }
         else{
-            throw new FormeInexistanteException();
+            throw new FormeInexistanteException("La forme " + obj.nom + " n'existe pas");
         }
-
     }
 
     @Override
@@ -113,7 +112,7 @@ public class CarreDAO extends DAO<Carre>{
                         resultat.getInt("Cote"));
             }
             else{
-                throw new FormeInexistanteException();
+                throw new FormeInexistanteException("La forme " + nom + " n'existe pas" );
             }
             resultat.close();
             requete.close();

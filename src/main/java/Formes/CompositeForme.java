@@ -1,28 +1,29 @@
 package Formes;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompositeForme extends Forme {
     private List<Forme> groupeFormes = new ArrayList<Forme>();
 
+    public Forme formeAUpdate;
+    public String nomTableForme;
+    public Forme ancienneFormeAUpdate;
+    public Point pointDeplacement;
+    public int typeUpdate; // 1 : AJOUT FORME AU COMPOSITE      2 : UPDATE D'UNE FORME DU COMPOSITE        3 : DEPLACEMENT DES FORMES DU COMPOSITE
+    // 4 : SUPP FORME DU COMPOSITE
     @Override
     public String toString(){
-        try{
-            if(groupeFormes.size() == 0) throw new CompositeFormeVideException();
-            else{
-                String contenu = "";
-                for(Forme forme : groupeFormes){
-                    contenu += forme.toString() + ",";
-                }
-                return contenu.substring(0, contenu.length()-1);
+        if(groupeFormes.size() == 0) return nom + " est vide";
+        else{
+            String contenu = nom + ": {\n";
+            for(Forme forme : groupeFormes){
+                contenu += "    " + forme.toString() + "\n";
             }
+            contenu.substring(0, contenu.length()-1);
+            contenu+="}";
+            return  contenu;
         }
-        catch (CompositeFormeVideException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void ajouter(Forme forme) throws CompositeFormeContientDejaException {
@@ -51,5 +52,51 @@ public class CompositeForme extends Forme {
 
     public CompositeForme(String nom) {
         super(nom);
+    }
+
+    public CompositeForme(String nom, Forme formeAUpdate, String nomTableForme) {
+        super(nom);
+        this.formeAUpdate = formeAUpdate;
+        this.nomTableForme = nomTableForme;
+    }
+
+    public Forme getFormeAUpdate() {
+        return formeAUpdate;
+    }
+
+    public void setFormeAUpdate(Forme formeAUpdate) {
+        this.formeAUpdate = formeAUpdate;
+    }
+
+    public String getNomTableForme() {
+        return nomTableForme;
+    }
+
+    public void setNomTableForme(String nomTableForme) {
+        this.nomTableForme = nomTableForme;
+    }
+
+    public int getTypeUpdate() {
+        return typeUpdate;
+    }
+
+    public void setTypeUpdate(int typeUpdate) {
+        this.typeUpdate = typeUpdate;
+    }
+
+    public Forme getAncienneFormeAUpdate() {
+        return ancienneFormeAUpdate;
+    }
+
+    public void setAncienneFormeAUpdate(Forme ancienneFormeAUpdate) {
+        this.ancienneFormeAUpdate = ancienneFormeAUpdate;
+    }
+
+    public Point getPointDeplacement() {
+        return pointDeplacement;
+    }
+
+    public void setPointDeplacement(Point pointDeplacement) {
+        this.pointDeplacement = pointDeplacement;
     }
 }
