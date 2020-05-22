@@ -3,13 +3,8 @@
 # Logiciel de dessin
 
 Une commande permet d'afficher les commandes disponibles ("?")
-Si la BD ne contient pas les tables au lancement du programme, merci de regarder dans la classe DAO, plus précisément les méthodes creationTables qui permet de créer les tables, et initBD qui permet de supprimer les données de toutes les tables.
 
-Pour créer les tables si elles n'existent pas déjà:
-
-CompositeFormeDAO compositeFormeDAO = new CompositeFormeDAO();
-compositeFormeDAO.creationTables();
-
+# Les tables peuvent ne pas êtres crées par défaut, si c'est le cas, il suffit de passer la variable premierLancement dans la classe DrawingApp à true, cela va créer tout les tables nécessaires par la suite, ne pas oublier de repasser cette variable à false après la création des tables.
 
 
 
