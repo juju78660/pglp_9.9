@@ -14,14 +14,14 @@ public class CompositeForme extends Forme {
     // 4 : SUPP FORME DU COMPOSITE
     @Override
     public String toString(){
-        if(groupeFormes.size() == 0) return nom + " est vide";
+        if(groupeFormes.size() == 0) return nom + ": vide";
         else{
             String contenu = nom + ": {\n";
             for(Forme forme : groupeFormes){
-                contenu += "    " + forme.toString() + "\n";
+                contenu += "        " + forme.toString() + "\n";
             }
             contenu.substring(0, contenu.length()-1);
-            contenu+="}";
+            contenu+="    }";
             return  contenu;
         }
     }
@@ -42,23 +42,10 @@ public class CompositeForme extends Forme {
         }
     }
 
-    /*      INUTILE DANS NOTRE PROJET
-    public void enlever(Formes.Forme forme) throws Exception {
-        if(groupeFormes.contains(forme)){
-            groupeFormes.remove(forme);
-        }
-        else throw new Exception("La forme n'existe pas");
-    }*/
-
     public CompositeForme(String nom) {
         super(nom);
     }
 
-    public CompositeForme(String nom, Forme formeAUpdate, String nomTableForme) {
-        super(nom);
-        this.formeAUpdate = formeAUpdate;
-        this.nomTableForme = nomTableForme;
-    }
 
     public Forme getFormeAUpdate() {
         return formeAUpdate;

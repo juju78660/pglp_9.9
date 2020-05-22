@@ -5,16 +5,30 @@ import Formes.CompositeFormeVideException;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe abstraite DAO
+ *
+ * @param <T> the type parameter
+ */
 public abstract class DAO<T> {
+    /**
+     * The Connect.
+     */
     public Connection connect = null;
+    /**
+     * The Db url.
+     */
     String dbURL = "jdbc:derby:DB;create=true";
 
+    /**
+     * Méthode permettant de créer les tables si celles-ci ne sont pas existantes
+     *
+     */
     private void creationTables() throws SQLException {
         connect = DriverManager.getConnection(dbURL);
-        PreparedStatement requete11 = this.connect.prepareStatement("DROP TABLE Carre");
+        /*PreparedStatement requete11 = this.connect.prepareStatement("DROP TABLE Carre");
         requete11.executeUpdate();
         this.connect.commit();
         PreparedStatement requete12 = this.connect.prepareStatement("DROP TABLE Cercle");
@@ -28,7 +42,7 @@ public abstract class DAO<T> {
         this.connect.commit();
         PreparedStatement requete15 = this.connect.prepareStatement("DROP TABLE ListeFormes");
         requete15.executeUpdate();
-        this.connect.commit();
+        this.connect.commit();*/
         PreparedStatement requete1 = this.connect.prepareStatement("CREATE TABLE Carre (Nom VARCHAR(50) NOT NULL, PosX VARCHAR(10) NOT NULL, PosY VARCHAR(10) NOT NULL, Cote INTEGER NOT NULL)");
         requete1.executeUpdate();
         this.connect.commit();
@@ -49,6 +63,11 @@ public abstract class DAO<T> {
         requete6.executeUpdate();
     }
 
+    /**
+     * Suppression des données de toutes les tables de la BD
+     *
+     * @throws SQLException the sql exception
+     */
     public void initBD() throws SQLException {
         connect = DriverManager.getConnection(dbURL);
         try{
@@ -76,18 +95,11 @@ public abstract class DAO<T> {
         }
     }
 
-    public void closeConnection(){
-        if (connect != null) {
-            try {
-                connect.commit();
-                connect.close();
-            }
-            catch (SQLException except) {
-                except.printStackTrace();
-            }
-        }
-    }
-
+    /**
+     * Affichage d'une table de la BD
+     *
+     * @param nomTable Nom de la table à afficher
+     */
     public void affichageTable(String nomTable){
         try {
             connect = DriverManager.getConnection(dbURL);
@@ -97,7 +109,7 @@ public abstract class DAO<T> {
             ResultSetMetaData resultMeta = resultat.getMetaData();
 
             System.out.println("\n**************************************************");
-            //On affiche le nom des colonnes
+            //Affiche le nom des colonnes
             for(int i = 1; i <= resultMeta.getColumnCount(); i++)
                 System.out.print("\t" + resultMeta.getColumnName(i).toUpperCase() + "\t *");
 
@@ -118,6 +130,12 @@ public abstract class DAO<T> {
         }
     }
 
+    /**
+     * Méthode de recupération de la liste des formes
+     *
+     * @return Map des formes
+     * @throws SQLException the sql exception
+     */
     public Map<String, String> recupListeFormes() throws SQLException {
         Map<String, String> listeFormes = new HashMap();
 
@@ -131,16 +149,56 @@ public abstract class DAO<T> {
         return listeFormes;
     }
 
+    /**
+     * Méthode de création d'un objet
+     *
+     * @param obj l'objet à créer
+     * @return boolean de retour
+     * @throws FormeDejaExistenteException the forme deja existente exception
+     * @throws SQLException                the sql exception
+     */
     public abstract boolean create(T obj) throws FormeDejaExistenteException, SQLException;
 
 
+    /**
+     * Méthode de suppression d'un objet
+     *
+     * @param nom de l'objet à supprimer
+     * @return boolean de retour
+     * @throws SQLException              the sql exception
+     * @throws FormeInexistanteException the forme inexistante exception
+     */
     public abstract boolean delete(String nom) throws SQLException, FormeInexistanteException;
 
 
+    /**
+     * Méthode de mise à jour d'un objet
+     *
+     * @param obj l'objet à modifier
+     * @return l'objet crée
+     * @throws SQLException                the sql exception
+     * @throws FormeInexistanteException   the forme inexistante exception
+     * @throws FormeDejaExistenteException the forme deja existente exception
+     * @throws CommandeException           the commande exception
+     * @throws CompositeFormeVideException the composite forme vide exception
+     */
     public abstract T update(T obj) throws SQLException, FormeInexistanteException, FormeDejaExistenteException, CommandeException, CompositeFormeVideException;
 
 
+    /**
+     * Méthode de récupération d'un objet
+     *
+     * @param nom de l'objet à récupérer
+     * @return objet trouvé
+     * @throws SQLException              the sql exception
+     * @throws FormeInexistanteException the forme inexistante exception
+     */
     public abstract T find(String nom) throws SQLException, FormeInexistanteException;
 
+    /**
+     * Initialisation
+     *
+     * @throws SQLException the sql exception
+     */
     public abstract void init() throws SQLException;
 }

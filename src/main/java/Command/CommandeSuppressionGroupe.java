@@ -1,39 +1,37 @@
 package Command;
 
 import DAO.*;
-
 import java.sql.SQLException;
 import java.util.Map;
 
 public class CommandeSuppressionGroupe implements Commande {
-    String nomForme = "";
-    String typeForme = "";
+    String nomGroupe = "";
     Map<String, String> listeFormes;
 
-    CarreDAO carreDAO = new CarreDAO();
-    CercleDAO cercleDAO = new CercleDAO();
-    RectangleDAO rectangleDAO = new RectangleDAO();
-    TriangleDAO triangleDAO = new TriangleDAO();
+    CompositeFormeDAO compositeFormeDAO = new CompositeFormeDAO();
 
     @Override
     public void execute() throws FormeInexistanteException, SQLException {
-        System.out.println("supp groupe");
-        listeFormes = carreDAO.recupListeFormes();
-        if(listeFormes.containsKey(nomForme)){
-            listeFormes.remove(nomForme);
+        listeFormes = compositeFormeDAO.recupListeFormes();
+        if(listeFormes.containsKey(nomGroupe)){
+            listeFormes.remove(nomGroupe);
+            compositeFormeDAO.init();
+            compositeFormeDAO.delete(nomGroupe);
         }
-        else throw new FormeInexistanteException("La forme " + nomForme + " n'existe pas");
-        //compo.init();
-        //carreDAO.delete(nomForme);
+        else throw new FormeInexistanteException("Le composite " + nomGroupe + " n'existe pas");
     }
 
     @Override
-    public void recupDonnees(String donnees) {
-        System.out.println(donnees);
+    public void recupDonnees(String donnees) throws CommandeException {
+        try{
+            nomGroupe = donnees.split("\\(")[1].replace(")", "");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new CommandeException("La commande n'est pas correctement entree (ex: deleteGroup(nomGroupe)");
+        }
     }
 
     @Override
-    public void print() throws SQLException, FormeInexistanteException {
-
+    public void print(){
+        System.out.println("Le composite " + nomGroupe + " a ete supprimee");
     }
 }

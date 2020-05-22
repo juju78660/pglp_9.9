@@ -21,7 +21,7 @@ public class CommandeAjoutFormeGroupe implements Commande {
     CompositeFormeDAO compositeFormeDAO = new CompositeFormeDAO();
 
     @Override
-    public void execute() throws SQLException, NomDejaUtiliseException, FormeInexistanteException {
+    public void execute() throws SQLException, FormeInexistanteException {
         listeFormes = compositeFormeDAO.recupListeFormes();
         if(listeFormes.containsKey(nomForme)){
             compositeFormeDAO.init();
@@ -76,11 +76,3 @@ public class CommandeAjoutFormeGroupe implements Commande {
         System.out.println(compositeForme);
     }
 }
-
-/*
-c1=Carre((1,10),30)
-r1=Rectangle((1,10),30,40)
-createGroup(compo1)
-addDataGroup(r1,compo1)
-print(compo1)
- */

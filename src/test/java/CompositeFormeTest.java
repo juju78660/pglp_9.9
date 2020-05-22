@@ -14,7 +14,10 @@ public class CompositeFormeTest {
         CompositeForme c1 = new CompositeForme("test");
         c1.ajouter(forme1);
         c1.ajouter(forme2);
-        assertEquals(c1.toString(),"Cercle(centre=(3,5), rayon=10),Carre(position=(1,2), cote=10)");
+        assertEquals(c1.toString(),"test: {\n" +
+                "        Cercle: Cercle(centre=(3,5), rayon=10)\n" +
+                "        Carre: Carre(position=(1,2), cote=10)\n" +
+                "    }");
     }
 
     @Test
@@ -26,7 +29,11 @@ public class CompositeFormeTest {
         c1.ajouter(forme1);
         c1.ajouter(forme2);
         c1.deplacer(new Point(8, 8));
-        assertEquals(c1.toString(),"Cercle(centre=(8,8), rayon=10),Carre(position=(8,8), cote=10)");
+        System.out.println(c1);
+        assertEquals(c1.toString(),"test: {\n" +
+                "        Cercle: Cercle(centre=(8,8), rayon=10)\n" +
+                "        Carre: Carre(position=(8,8), cote=10)\n" +
+                "    }");
     }
 
     @Test (expected = CompositeFormeVideException.class)

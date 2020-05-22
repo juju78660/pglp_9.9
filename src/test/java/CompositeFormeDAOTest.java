@@ -35,7 +35,7 @@ public class CompositeFormeDAOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertEquals(recupComposite.toString(), "CompositeTest est vide");
+        assertEquals(recupComposite.toString(), "CompositeTest: vide");
     }
 
     @Test
@@ -91,7 +91,7 @@ public class CompositeFormeDAOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertEquals(recupComposite.toString(), "CompositeTest: {\n" + "    Carre1: Carre(position=(3,4), cote=5)\n" + "    Cercle1: Cercle(centre=(10,13), rayon=7)\n" + "}");
+        assertEquals(recupComposite.toString(), "CompositeTest: {\n" + "        Carre1: Carre(position=(3,4), cote=5)\n" + "        Cercle1: Cercle(centre=(10,13), rayon=7)\n" + "    }");
     }
 
     @Test
@@ -167,7 +167,7 @@ public class CompositeFormeDAOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertEquals(recupComposite2.toString(), "CompositeTest: {\n" + "    Carre1: Carre(position=(3,4), cote=5)\n" + "    Cercle1: Cercle(centre=(5,6), rayon=11)\n" + "}");
+        assertEquals(recupComposite2.toString(), "CompositeTest: {\n" + "        Carre1: Carre(position=(3,4), cote=5)\n" + "        Cercle1: Cercle(centre=(5,6), rayon=11)\n" + "    }");
     }
 
     @Test
@@ -318,6 +318,6 @@ public class CompositeFormeDAOTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertEquals(recupComposite2.toString(), "CompositeTest: {\n" + "    Cercle1: Cercle(centre=(10,13), rayon=7)\n" + "}");
+        assertEquals(recupComposite2.toString(), "CompositeTest: {\n" + "        Cercle1: Cercle(centre=(10,13), rayon=7)\n" + "    }");
     }
 }

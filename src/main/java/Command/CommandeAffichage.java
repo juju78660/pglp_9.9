@@ -5,7 +5,7 @@ import Formes.Forme;
 
 import java.sql.SQLException;
 import java.util.Map;
-// MARCHE
+
 public class CommandeAffichage implements Commande {
     String nomForme = "";
     String typeForme = "";

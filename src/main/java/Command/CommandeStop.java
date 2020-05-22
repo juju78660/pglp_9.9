@@ -1,10 +1,5 @@
 package Command;
 
-
-import DAO.FormeInexistanteException;
-
-import java.sql.SQLException;
-
 public class CommandeStop implements Commande {
     @Override
     public void execute() {
@@ -13,7 +8,7 @@ public class CommandeStop implements Commande {
     }
 
     @Override
-    public void recupDonnees(String donnees) { }
+    public void recupDonnees(String donnees) {}
 
     @Override
     public void print(){

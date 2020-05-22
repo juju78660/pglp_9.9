@@ -1,6 +1,7 @@
 package DAO;
 
 import Command.CommandeException;
+import Command.NomDejaUtiliseException;
 import Formes.*;
 
 import java.sql.*;
@@ -19,8 +20,9 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
 
     @Override
     public boolean create(CompositeForme obj) throws FormeDejaExistenteException, SQLException {
-        if(!listeComposites.containsKey(obj.nom)){
+        if(!listeComposites.containsKey(obj.nom)){  // SI LA LISTE NE CONTIENT PAS LA FORME
             listeComposites.put(obj.nom, new HashMap<>());
+            // INSERTION DE LA DONNEE DANS LA TABLE LISTEFORMES
             String contenuRequete = "INSERT INTO ListeFormes (NomForme, NomTable) VALUES (?, ?)";
             PreparedStatement requete = null;
             connect = DriverManager.getConnection(dbURL);
@@ -35,6 +37,7 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
             }
             connect.commit();
             connect.close();
+            // INSERTION DE LA DONNEE DANS LA TABLE COMPOSITE
             String contenuRequete2 = "INSERT INTO Composite (NomComposite, NomForme, TableForme) VALUES (?, ?, ?)";
             PreparedStatement requete2 = null;
             connect = DriverManager.getConnection(dbURL);
@@ -61,6 +64,7 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
             listeComposites.remove(nom);
         }
         else throw new FormeInexistanteException("Le composite" + nom + " n'existe pas");
+        // SUPPRESSION DE LA FORME DES COMPOSITES
         try {
             connect = DriverManager.getConnection(dbURL);
             String contenuRequete = "DELETE FROM Composite WHERE NomComposite = ?";
@@ -75,7 +79,7 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
         }
         connect.commit();
         connect.close();
-
+        // SUPPRESSION DE LA FORME DE LA LISTE DES FORMES
         try {
             connect = DriverManager.getConnection(dbURL);
             String contenuRequete = "DELETE FROM ListeFormes WHERE NomForme = ?";
@@ -184,16 +188,16 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
                 }
             }
             else throw new CompositeFormeVideException();
-            //compositeFormeDAO.update((Forme)obj.formeAUpdate);
         }
         else if (obj.getTypeUpdate()==4){       // SUPPRESSION D'UNE FORME DU COMPOSITE
             if(listeFormes.containsKey(obj.formeAUpdate.nom)){ // L'OBJET EST BIEN DANS LE COMPOSITE, ON PEUT SUPPRIMER
-                String contenuRequete2 = "DELETE FROM Composite WHERE NomForme = ?";
+                String contenuRequete2 = "DELETE FROM Composite WHERE NomForme = ? AND NomComposite = ?";
                 PreparedStatement requete2 = null;
                 connect = DriverManager.getConnection(dbURL);
                 try {
                     requete2 = connect.prepareStatement(contenuRequete2);
                     requete2.setString(1, obj.formeAUpdate.nom);
+                    requete2.setString(2, obj.nom);
                     requete2.executeUpdate();
                     requete2.close();
                 } catch (SQLException e) {
@@ -202,8 +206,9 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
                 connect.commit();
                 connect.close();
                 listeFormes.remove(obj.formeAUpdate);
-                listeComposites.replace(obj.nom, ancienneListeFormes, listeFormes);            }
-            else throw new FormeInexistanteException("La forme " + obj.formeAUpdate + " n'existe pas/ne fait pas partie de ce composite");
+                listeComposites.replace(obj.nom, ancienneListeFormes, listeFormes);
+            }
+            else throw new FormeInexistanteException("La forme " + obj.formeAUpdate + " n'existe pas/ne fait pas partie du composite " + obj.nom);
         }
         else throw new CommandeException("La commande n'est pas correctement utilisee");
 
@@ -262,14 +267,16 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
     public void init() throws SQLException {
         try {
             recuperationDonnees();
-        } catch (FormeInexistanteException e) {
+        } catch (FormeInexistanteException | CompositeFormeContientDejaException e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<CompositeForme> recuperationDonnees() throws SQLException, FormeInexistanteException {
+    public ArrayList<CompositeForme> recuperationDonnees() throws SQLException, FormeInexistanteException, CompositeFormeContientDejaException {
         ArrayList<CompositeForme> donnees = new ArrayList<>();
-        listeComposites = new HashMap<String, HashMap<String, Forme>>();
+        listeComposites = new HashMap<>();
+        Map<String, CompositeForme> donneesTemp = new HashMap<>();
+
         connect = DriverManager.getConnection(dbURL);
         String contenuRequete = "SELECT * FROM Composite";
         PreparedStatement requete = connect.prepareStatement(contenuRequete);
@@ -278,6 +285,7 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
             String nomComposite = resultat.getString("NomComposite");
             String nomForme = resultat.getString("NomForme");
             String tableForme = resultat.getString("TableForme");
+
             Forme recupForme = null;
             if(!nomForme.equals("CREATION")){
                 switch(tableForme){
@@ -295,8 +303,10 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
                         break;
                 }
                 if(listeComposites.containsKey(nomComposite)){
+                    if(!donneesTemp.containsKey(nomComposite)) donneesTemp.put(nomComposite, new CompositeForme(nomComposite));
                     HashMap listeFormes = listeComposites.get(nomComposite);
                     listeFormes.put(recupForme.nom, recupForme);
+
                     listeComposites.put(nomComposite, listeFormes);
                 }
                 else{
@@ -306,9 +316,26 @@ public class CompositeFormeDAO extends DAO<CompositeForme>{
                 }
             }
             else{
+                if(!donneesTemp.containsKey(nomComposite)) donneesTemp.put(nomComposite, new CompositeForme(nomComposite));
                 listeComposites.put(nomComposite, new HashMap());
             }
         }
+        Set cles = donneesTemp.keySet();
+        Iterator it = cles.iterator();
+        while (it.hasNext()) {
+            Object cle = it.next();
+            donnees.add(donneesTemp.get(cle));
+        }
         return donnees;
+    }
+    /**
+     * Méthode de récupération des formes d'un composite
+     *
+     * @param nomComposite nom du composite
+     *
+     */
+    public HashMap<String, Forme> recupListeFormesPourDeplacement(String nomComposite){
+        HashMap<String, Forme> listeFormes = listeComposites.get(nomComposite);
+        return listeFormes;
     }
 }

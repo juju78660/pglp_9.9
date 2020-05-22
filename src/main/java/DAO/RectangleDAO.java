@@ -47,7 +47,7 @@ public class RectangleDAO extends DAO<Rectangle> {
             connect.close();
             return true;
         }
-        else throw new FormeDejaExistenteException("L'objet");
+        else throw new FormeDejaExistenteException("L'objet " + obj + " existe déjà");
     }
 
     @Override
