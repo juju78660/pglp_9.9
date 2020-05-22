@@ -1,6 +1,7 @@
 package Command;
 
 import DAO.CarreDAO;
+import DAO.CompositeFormeDAO;
 import DAO.FormeDejaExistenteException;
 import DAO.FormeInexistanteException;
 
@@ -12,6 +13,9 @@ import java.util.Set;
 
 public class DrawingApp {
     private DrawingTUI drawingTUI;
+
+    // A MODIFIER APRES LA PREMIERE UTILISATION !!
+    static Boolean premierLancement = false;
 
     /**
      * Méthode qui initialise les données, va recuperer les entrees clavier et utiliser DrawingTUI pour les traiter
@@ -59,6 +63,10 @@ public class DrawingApp {
      * @throws NomDejaUtiliseException     the nom deja utilise exception
      */
     public static void main( String[] args ) throws CommandeException, FormeDejaExistenteException, SQLException, FormeInexistanteException, NomDejaUtiliseException {
+        if(premierLancement){
+            CompositeFormeDAO compositeFormeDAO = new CompositeFormeDAO();
+            compositeFormeDAO.creationTables();
+        }
         DrawingApp drawingApp = new DrawingApp();
         drawingApp.run();
     }
