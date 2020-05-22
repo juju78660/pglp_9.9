@@ -26,7 +26,7 @@ public abstract class DAO<T> {
      * Méthode permettant de créer les tables si celles-ci ne sont pas existantes
      *
      */
-    private void creationTables() throws SQLException {
+    public void creationTables() throws SQLException {
         connect = DriverManager.getConnection(dbURL);
         /*PreparedStatement requete11 = this.connect.prepareStatement("DROP TABLE Carre");
         requete11.executeUpdate();
